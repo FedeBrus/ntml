@@ -1,0 +1,32 @@
+# "NTML"
+
+> "NTML è un linguaggio creato da Federico Brusadin per la stesura di appunti e promemoria."
+> "NTML si pone i seguenti obiettivi:"
+
+[ * "Velocità di stesura"
+  * "Leggibilità e non intrusività del file sorgente"
+  * "Ridotta complessità"
+  * "Appoggiarsi ad HTML base" ]
+
+## "Velocità di stesura"
+
+> "NTML è un linguaggio progettato per essere veloce da scrivere, l'utente deve concentrarsi su prendere appunti e non deve pensare appunti
+dettagli del linguaggio"
+
+## "Leggibilità e non intrusività del file sorgente"
+
+> "Il file sorgente .ntml deve essere semplice da leggere, in modo che le diverse sezioni siano facilmente riconoscibili e di conseguenza
+facili da modificare"
+
+## "Ridotta complessità"
+
+> "NTML non si pone come soluzione definitiva e mira ad offrire una più ridotta gamma di funzionalità"
+
+## "Appoggiarsi ad HTML base"
+
+> "NTML viene compilato in HTML base, facendo uso degli elementi già presenti nello standard"
+
+## "Altre guide"
+
+[ * (("./sintassi.html" | "Sintassi"))
+  * (("./compilazione.html" | "Compilazione")) ]

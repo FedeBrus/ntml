@@ -1,0 +1,101 @@
+# "Come usare NTML"
+
+## "Che cos'è?"
+
+> "NTML è un linguaggio per prendere appunti"
+
+## "Sintassi"
+
+{   > "\"Testo\"" --
+    "Testo senza tag"   }
+
+{   > "> \"Testo\"" --
+    > "Paragrafo"   }
+
+{   > "# \"Titolo\"" --
+    # "Titolo"  }
+
+{   > "## \"Sottotitolo\"" --
+    ## "Sottotitolo"  }
+
+{   > "### \"Intestazione\"" --
+    ### "Intestazione"  }
+
+{   > "{\"Blocco\"}" --
+    { "Blocco" }  }
+
+{   > "\"--\"" --
+    --  }
+
+{   > "((\"www.google.com\"))" -- 
+    (("https://www.google.com"))  }
+
+{   > "((\"www.google.com\" | \"Google\"))" -- 
+    (("https://www.google.com" | "Google"))  }
+
+{   > "[[ \"./img/iperbole.png\" | \"300\";\"auto\" ]]" --
+    [[ "./img/iperbole.png" | "300";"auto" ]]   }
+
+{   >  "[ <br>
+            + \"item1\" <br>
+            + \"item2\" <br>
+        ]" --
+    [
+        + "item1"
+        + "item2" 
+    ]   }
+
+{   >  "[ <br>
+            * \"item1\" <br>
+            * \"item2\" <br>
+        ]" --
+    [
+        * "item1"
+        * "item2" 
+    ]   }
+
+{   > "$ e^{\int a(x) dx} \int b(x) e^{-\int a(x) dx} dx $" -- 
+    $ e^{\int a(x) dx} \int b(x) e^{-\int a(x) dx} dx $     }
+
+{   > "§ @Override public String toString() { return \"%\" + code + \"%\"; } §" --
+    §
+@Override
+public String toString() {
+    return "%" + code + "%";
+}
+    § }
+
+{   > ";\"Parola\" <br> + \"Definizione1\" <br> + \"Definizione2\" <br> " --
+    ; "Parola"
+    + "Definizione1"
+    + "Definizione2"    }
+
+{   
+    > "|| <br>
+    |- ! \"x\" ! \"1\" ! \"2\" ! \"3\" <br>
+    |- ! \"2\" | \"2\" | \"4\" | \"6\" <br>
+    |- ! \"4\" | \"4\" | \"8\" | \"12\" <br>
+    |- ! \"8\" | \"8\" | \"16\" | \"24\" <br>
+    ||" -- 
+    ||
+    |- ! "x" ! "1" ! "2" ! "3"
+    |- ! "2" | "2" | "4" | "6"
+    |- ! "4" | "4" | "8" | "12"
+    |- ! "8" | "8" | "16" | "24"
+    ||
+}
+
+{   
+    > "|| <br>
+    |- !_ \"Nome\" !>> \"Indirizzo\" <br>
+    |- ! \"Città\" ! \"Via\" ! \"Civico\" <br>
+    |- | \"Federico\" | \"Thiene\" | \"Viale Ungheria\" | \"34/c\" <br>
+    |- | \"Manuel\" | \"Fara Vicentino\" | \"Via Reale\" | \"28/b\" <br>
+    ||" -- 
+    ||
+    |- !_ "Nome" !>> "Indirizzo"
+    |- ! "Città" ! "Via" ! "Civico"
+    |- | "Federico" | "Thiene" | "Viale Ungheria" | "34/c"
+    |- | "Manuel" | "Fara Vicentino" | "Via Reale" | "28/b"
+    ||
+}
