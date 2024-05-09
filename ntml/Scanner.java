@@ -147,6 +147,8 @@ class Scanner {
         advance();
 
         String value = source.substring(start + 1, current - 1);
+        value = value.replace("<", "&lt");
+        value = value.replace(">", "&gt");
         addToken(CODE, value);
     }
     
@@ -171,6 +173,8 @@ class Scanner {
         advance();
 
         String value = source.substring(start + 1, current - 1);
+        value = value.replace("<", "&lt");
+        value = value.replace(">", "&gt");
         value = escape(value);
         
         addToken(STRING, value);
