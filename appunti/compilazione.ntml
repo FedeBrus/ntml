@@ -1,5 +1,0 @@
-# "Compilazione"
-
-> "Per compilare un file .ntml si usa ntml.jar con il seguente comando: "
-
-§ $~ java -jar ntml.jar source.ntml style.css outputdir §
