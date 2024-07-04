@@ -29,14 +29,18 @@ class Parser {
             if (check(STRING)) return new Expr.Text(text());
             if (check(CODE)) return new Expr.Code(code());
             if (check(MATH)) return new Expr.Math(math());
+
             if (match(HASH)) return new Expr.Title(text());
             if (match(DOUBLE_HASH)) return new Expr.Subtitle(text());
             if (match(TRIPLE_HASH)) return new Expr.Caption(text());
             if (match(ANGLE_RIGHT)) return new Expr.Paragraph(text());
+            
+            if (match(PAREN_LEFT)) return grouping();
             if (match(BRACE_LEFT)) return new Expr.Block(block());
-            if (match(BRACKET_LEFT)) return list();
-            if (match(DOUBLE_NEWLINE)) return expression();
+            
             if (match(DOUBLE_HYPHEN)) return new Expr.HorizontalLine();
+            
+            if (match(BRACKET_LEFT)) return list();
             if (match(SEMICOLON)) return def();
             if (match(DOUBLE_PAREN_LEFT)) return link();
             if (match(DOUBLE_BRACKET_LEFT)) return img();
@@ -58,7 +62,7 @@ class Parser {
             if (match(PIPE_HYPHEN)) {
                 List<Expr.Cell> row = new ArrayList<>();
                 
-                while(!check(DOUBLE_PIPE) && !check(PIPE_HYPHEN) && !isAtEnd()) {
+                while (!check(DOUBLE_PIPE) && !check(PIPE_HYPHEN) && !isAtEnd()) {
                     rowSpan = 1;
                     colSpan = 1;
                     
@@ -70,7 +74,7 @@ class Parser {
                         error(peek(), "Expect either !, | or |-.");
                     }
                     
-                    while(!check(STRING) && !isAtEnd()) {
+                    while((check(UNDERSCORE) || check(ANGLE_RIGHT)) && !isAtEnd()) {
                         if (match(UNDERSCORE)) {
                             rowSpan++;
                         } else if (match(ANGLE_RIGHT)) {
@@ -81,8 +85,12 @@ class Parser {
                     }
                     
                     if (peek().type != EOF) {
-                        String content = consume(STRING, "Expect string.").literal;
-                        row.add(new Expr.Cell(header, rowSpan, colSpan, content));
+                        try {
+                            Expr.Listable listable = (Expr.Listable)expression();
+                            row.add(new Expr.Cell(header, rowSpan, colSpan, listable));
+                        } catch (Exception e) {
+                            error(previous(), " Expect listable expression.");
+                        }
                     }
                 }
                 
@@ -193,11 +201,22 @@ class Parser {
         List<Expr> expressions = new ArrayList<>();
 
         while (!check(BRACE_RIGHT) && !isAtEnd()) {
-          expressions.add(expression());
+           expressions.add(expression());
         }
 
         consume(BRACE_RIGHT, "Expect '}' after block.");
         return expressions;
+    }
+
+    private Expr.Grouping grouping() {
+        List<Expr> expressions = new ArrayList<>();
+
+        while (!check(PAREN_RIGHT) && !isAtEnd()) {
+            expressions.add(expression());
+        }
+
+        consume(PAREN_RIGHT, "Expect ')' after grouping.");
+        return new Expr.Grouping(expressions);
     }
   
     private boolean match(TokenType... types) {

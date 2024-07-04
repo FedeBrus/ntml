@@ -129,7 +129,7 @@ class Scanner {
 
         advance();
 
-        String value = source.substring(start + 1, current - 1);
+        String value = clean(source.substring(start + 1, current - 1));
         addToken(MATH, value);
     }
     
@@ -158,8 +158,8 @@ class Scanner {
                 line++;
             }
             
-            if (peek() == '\\') {
-                advance();
+            if (peek() == '\\') { //This is done so that \" can be escaped
+                 advance();
             }
             
             advance();
@@ -172,12 +172,16 @@ class Scanner {
 
         advance();
 
-        String value = source.substring(start + 1, current - 1);
+        String value = clean(source.substring(start + 1, current - 1));
         value = value.replace("<", "&lt");
         value = value.replace(">", "&gt");
         value = escape(value);
         
         addToken(STRING, value);
+    }
+
+    static String clean(String value) {
+        return value.replace("\n", "").replace("\t", "").trim();
     }
     
     static String escape(String value) {

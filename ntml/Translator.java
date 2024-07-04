@@ -48,6 +48,15 @@ public class Translator implements Visitor<List<String>> {
     }
 
     @Override
+    public List<String> visitGroupingExpr(Expr.Grouping expr) {
+        List<String> result = new ArrayList<>();
+        for (Expr e : expr.expressions) {
+            result.addAll(e.accept(this));
+        }
+        return result;
+    }
+
+    @Override
     public List<String> visitParagraphExpr(Expr.Paragraph expr) {
         List<String> result = new ArrayList<>();
         result.add("<p>");
@@ -157,7 +166,7 @@ public class Translator implements Visitor<List<String>> {
         List<String> result = new ArrayList<>();
         
         result.add("<div class=\"code\">");
-        result.add("<pre>"+expr.code+"</pre>");
+        result.add("<pre>" + expr.code + "</pre>");
         result.add("</div>");
         
         return result;
@@ -166,7 +175,7 @@ public class Translator implements Visitor<List<String>> {
     @Override
     public List<String> visitMathExpr(Expr.Math expr) {
         List<String> result = new ArrayList<>();
-        
+
         result.add("<div class=\"math\">");
         result.add("$$" + expr.math + "$$");
         result.add("</div>");
@@ -197,16 +206,16 @@ public class Translator implements Visitor<List<String>> {
         
         String openingTag = expr.header ? "<th " : "<td ";
                 
-        if (expr.rowSpan > 0) {
+        if (expr.rowSpan > 1) {
             openingTag += "rowspan=\"" + expr.rowSpan + "\"";
         }
                 
-        if (expr.colSpan > 0) {
+        if (expr.colSpan > 1) {
             openingTag += " colspan=\"" + expr.colSpan + "\"";
         }
                 
         result.add(openingTag + ">");
-        result.add(expr.content);
+        result.addAll(expr.content.acceptListable(this));
         result.add(expr.header ? "</th>" : "</td>");
         
         return result;  

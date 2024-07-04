@@ -36,6 +36,7 @@ public class Formatter {
                 String str = output.get(i);
                 String next = output.get(i + 1);
                 String openTagRegex = "<[^\\/][^>]*>";
+                String closedTagRegex = "<\\/[^>]*>";
                 String genericTagRegex = "<[^>]*>";
                 
                 for(int j = 0; j < tabCount; j++) {
@@ -45,9 +46,10 @@ public class Formatter {
                 fw.write("\n");
                 
                 if (!noIndent(str)) {
-                    if (str.matches(openTagRegex) && (next.matches(openTagRegex) || !next.matches(genericTagRegex))) {
+                    if (str.matches(openTagRegex) && !next.matches(closedTagRegex)) {
                         tabCount++;
-                    } else if (!str.matches(openTagRegex) && !next.matches(openTagRegex)) {
+                    } else if (next.matches(closedTagRegex) && !str.matches(openTagRegex)) { // Se un tago indenta al contrario vuol dire che è chiuso OPPURE è contenuto seguito
+            // da un chiuso
                         tabCount--;
                     }
                 }
@@ -65,8 +67,7 @@ public class Formatter {
             || str.matches("<img.*>") 
             || str.matches("<script.*")
             || str.matches("<br>")
-            || str.matches("<hr>") 
-            || str.matches("<style.*>")) {
+            || str.matches("<hr>")) {
             return true;
         }
         
@@ -77,8 +78,12 @@ public class Formatter {
         List<String> head = new ArrayList<>();
         
         head.add("<head>");
-        byte[] bytes = Files.readAllBytes(Paths.get(stylePath));
-        head.add("<style>\n" + new String(bytes, Charset.defaultCharset()) + "</style>");
+        List<String> lines = Files.readAllLines(Paths.get(stylePath));
+        head.add("<style>");
+        for (String line : lines) {
+            head.add(line);
+        }
+        head.add("</style>");
         head.add("<title>");
         head.add(title);
         head.add("</title>");

@@ -13,6 +13,7 @@ abstract class Expr {
         R visitParagraphExpr(Paragraph expr);
         R visitListingExpr(Listing expr);
         R visitTextExpr(Text expr);
+        R visitGroupingExpr(Grouping expr);
         R visitListItemExpr(ListItem expr);
         R visitHorizontalLineExpr(HorizontalLine expr);
         R visitDefinitionExpr(Definition expr);
@@ -280,6 +281,33 @@ abstract class Expr {
             return s + "}";
         }
     }
+
+    static class Grouping extends Expr implements Listable {
+        Grouping(List<Expr> expressions) {
+            this.expressions = expressions;
+        }
+
+        @Override
+        public <R> R acceptListable(Visitor<R> visitor) {
+            return this.accept(visitor);
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitGroupingExpr(this);
+        }
+
+        final List<Expr> expressions;
+
+        @Override
+        public String toString() {
+            String s = "GROUPING (\n";
+            for (Expr expr : expressions) {
+                s += expr.toString() + "\n";
+            }
+            return s + ")";
+        }
+    }
     
     static class Table extends Expr {
         Table(List<List<Cell>> cells) {
@@ -307,7 +335,7 @@ abstract class Expr {
     }
     
     static class Cell extends Expr {
-        public Cell(boolean header, int rowSpan, int colSpan, String content) {
+        public Cell(boolean header, int rowSpan, int colSpan, Listable content) {
             this.header = header;
             this.rowSpan = rowSpan;
             this.colSpan = colSpan;
@@ -318,7 +346,7 @@ abstract class Expr {
             this.header = header;
             this.rowSpan = 0;
             this.colSpan = 0;
-            this.content = "";
+            this.content = new Text("");
         }
 
         @Override
@@ -329,11 +357,11 @@ abstract class Expr {
         final boolean header;
         final int rowSpan;
         final int colSpan;
-        final String content;
+        final Listable content;
         
         @Override
         public String toString() {
-            return "|" + content + "|";
+            return "|" + content.toString() + "|";
         }
     }
     
